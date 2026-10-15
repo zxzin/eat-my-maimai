@@ -1,6 +1,6 @@
 {
   "format": "maimai-public-source-package",
-  "preparedAt": "2026-10-15T13:53:11.493Z",
+  "preparedAt": "2026-10-15T13:56:41.676Z",
   "publication": "local-only",
   "files": [
     {
@@ -36,7 +36,7 @@
     {
       "file": "docs/CONTEST_CHECKLIST.md",
       "bytes": 4777,
-      "sha256": "67cd7488515ec3876861d05b24e407cc441ac1fca89262f6d0b56a73f6141264"
+      "sha256": "81b87dd9078e19edcc51894648c88a6a32955abe25042d496d672fd10b128421"
     },
     {
       "file": "docs/SOURCES.md",
