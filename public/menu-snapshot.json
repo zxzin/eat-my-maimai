@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "source": "official-mcp-public-snapshot",
+  "retrievedAt": "2026-10-15T13:41:49.026Z",
+  "store": {
+    "code": "1450713",
+    "name": "麦当劳上海黄浦华旭国际大厦餐厅",
+    "city": "上海市",
+    "address": "南京东路街道西藏中路336号"
+  },
+  "nutrition": {
+    "retrievedAt": "2026-10-15T13:41:48.123Z",
+    "foodCount": 158,
+    "matchedIds": [
+      "bigmac",
+      "spicy",
+      "nuggets",
+      "fries",
+      "fish"
+    ]
+  },
+  "products": [
+    {
+      "packId": "bigmac",
+      "code": "1100",
+      "name": "巨无霸",
+      "publicPriceYuan": 25.5,
+      "originalPriceYuan": 25.5,
+      "priceSource": "menu-current"
+    },
+    {
+      "packId": "spicy",
+      "code": "1440",
+      "name": "麦辣鸡腿汉堡",
+      "publicPriceYuan": 22.5,
+      "originalPriceYuan": 22.5,
+      "priceSource": "menu-current"
+    },
+    {
+      "packId": "nuggets",
+      "code": "1401",
+      "name": "麦乐鸡5块",
+      "publicPriceYuan": 14,
+      "originalPriceYuan": 14,
+      "priceSource": "menu-current"
+    },
+    {
+      "packId": "fries",
+      "code": "4810",
+      "name": "中薯条",
+      "publicPriceYuan": 13.5,
+      "originalPriceYuan": 13.5,
+      "priceSource": "menu-current"
+    },
+    {
+      "packId": "fish",
+      "code": "1600",
+      "name": "麦香鱼",
+      "publicPriceYuan": 22.5,
+      "originalPriceYuan": 22.5,
+      "priceSource": "menu-current"
+    }
+  ]
+}

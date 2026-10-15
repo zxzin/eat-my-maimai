@@ -1,0 +1,25 @@
+{
+  "name": "angry-burgers",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/*.test.mjs",
+    "dev:lan": "vite --host 0.0.0.0",
+    "build:single": "node scripts/build-single-html.mjs",
+    "check:single": "node scripts/single-html-check.mjs",
+    "package:github": "node scripts/package-github.mjs",
+    "sync:public": "node scripts/sync-public-menu.mjs"
+  },
+  "dependencies": {
+    "three": "^0.180.0",
+    "cannon-es": "^0.20.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.7",
+    "@playwright/test": "^1.55.0"
+  }
+}

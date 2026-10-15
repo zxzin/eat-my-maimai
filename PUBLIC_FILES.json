@@ -1,0 +1,269 @@
+{
+  "format": "maimai-public-source-package",
+  "preparedAt": "2026-10-15T13:44:46.479Z",
+  "publication": "local-only",
+  "files": [
+    {
+      "file": "CONTEST_DECLARATION.md",
+      "bytes": 1522,
+      "sha256": "cd28101bcb29cc8fb24b372fe91ce6b42c4a1487a54e01f7ade0c8c6a84241b7"
+    },
+    {
+      "file": "LICENSE",
+      "bytes": 1083,
+      "sha256": "5b4e0cafc7d7f5a5e4b982ef0e74ce6dc08afffc072b16b79786051a9a29645b"
+    },
+    {
+      "file": "MCP_INTEGRATION.md",
+      "bytes": 5669,
+      "sha256": "ebdef8a3765e9537ba90040c834674f03338e572402d7e3c7f093bba5ef90656"
+    },
+    {
+      "file": "PRODUCT.md",
+      "bytes": 2803,
+      "sha256": "e794f836580e21b62fd7a35fb4f45e8290e702d28b2740303e17cfea7a25f818"
+    },
+    {
+      "file": "README.md",
+      "bytes": 5749,
+      "sha256": "8051ef3690c3a9c85c97202881a590c4e3112953aa228e362f3bf92552e8977c"
+    },
+    {
+      "file": "THIRD_PARTY_NOTICES.md",
+      "bytes": 2832,
+      "sha256": "395a6250b952b7d2dce2b1ea7df1096be52e0db08e7f992d755e2ddde550173a"
+    },
+    {
+      "file": "docs/CONTEST_CHECKLIST.md",
+      "bytes": 4794,
+      "sha256": "1d5f364863c1c9984fe2bd8580125b9b44ed0a4d516ad4821a05dacee4317690"
+    },
+    {
+      "file": "docs/SOURCES.md",
+      "bytes": 3455,
+      "sha256": "a1055611742328165cdca34f3696c0704c309773d65a71291c06fd08d27655b0"
+    },
+    {
+      "file": "docs/XIAOHONGSHU_DRAFT.md",
+      "bytes": 2160,
+      "sha256": "3620aadabc5e8434fc8e60369055d9f5b883996a926debec253e5333852198ed"
+    },
+    {
+      "file": "docs/screenshots/gameplay.png",
+      "bytes": 711865,
+      "sha256": "a7e7a0af9d2ee43a52a27a6fd8ce0bee99d7c9ef4e868a715fd9518ad1a5744c"
+    },
+    {
+      "file": "docs/screenshots/mobile.png",
+      "bytes": 232309,
+      "sha256": "ad2d66c0dc8b03ca1469eca07761b2dcf453ef2b9e42a0a9a5ead75f065c0d5a"
+    },
+    {
+      "file": "index.html",
+      "bytes": 13512,
+      "sha256": "b3e2b781f18324836cc2401a77c7cbcfabf97fee46b97be18f48ce9e423a1db8"
+    },
+    {
+      "file": "mcp-config.example.json",
+      "bytes": 190,
+      "sha256": "cff1fea96794eff822307c913915e8813bbead5a41870e5dca3e8d9d547dcb8f"
+    },
+    {
+      "file": "package-lock.json",
+      "bytes": 37474,
+      "sha256": "dd049a51288eade0e4d9d40cbca783900335229250b52be848d6a8500184c1ac"
+    },
+    {
+      "file": "package.json",
+      "bytes": 693,
+      "sha256": "4abcb97c0343b607f15104190c71088ab8b704b591de7da957951514dd67844d"
+    },
+    {
+      "file": "public/menu-snapshot.json",
+      "bytes": 1454,
+      "sha256": "90d6ca72326fe08fd2ee3d78f587bd4368507cc834a179b9f509a31959972134"
+    },
+    {
+      "file": "scripts/build-single-html.mjs",
+      "bytes": 9798,
+      "sha256": "503b524099c6880d80abf8c0f0e6a1b84f4635fd93aa0ecc44ab6a898b4c3326"
+    },
+    {
+      "file": "scripts/economy-check.mjs",
+      "bytes": 15194,
+      "sha256": "37d5e6a7db81403ab9aaf6e6b819cf8223661bd0c001defef4cd74ba4f5db568"
+    },
+    {
+      "file": "scripts/package-github.mjs",
+      "bytes": 7483,
+      "sha256": "adc12ca4ce96b7fc1a8f91fa0a0f09781e03713c2b65efc317cf142e93420ccf"
+    },
+    {
+      "file": "scripts/shooter-check.mjs",
+      "bytes": 11586,
+      "sha256": "d5da8085e46271d5967ba6dbed263f960a593579d87bfb9ea5954abf9d29ce77"
+    },
+    {
+      "file": "scripts/single-html-check.mjs",
+      "bytes": 6084,
+      "sha256": "85ac69adb83488c079af6569f85064f0df94fa00353ff8c1654a7dec3b5b4ec1"
+    },
+    {
+      "file": "scripts/sync-public-menu.mjs",
+      "bytes": 3226,
+      "sha256": "7a06008b25802f83e0b4fa5b52b47420242f25d0a001fcd0d16e1d3721475f4a"
+    },
+    {
+      "file": "server/mcd-mcp.js",
+      "bytes": 14117,
+      "sha256": "35c53d852a8055d77044425db86d4e1d00b18f99002665fb291794697181575b"
+    },
+    {
+      "file": "server/mcp-vite-plugin.js",
+      "bytes": 4275,
+      "sha256": "f2af2b68b7dfd66e0f1c4597c534796bfa258a0aec90c52d25a91d203f2fda5b"
+    },
+    {
+      "file": "src/economy.js",
+      "bytes": 5512,
+      "sha256": "2389431a63a8cd019fc3bcba950a99685abe12e1b6131003f82eb7aca3d5dbcc"
+    },
+    {
+      "file": "src/food-models.js",
+      "bytes": 20339,
+      "sha256": "0730bf69987f92897bc8c139ac3cc2054e4e79d71bb4c03e4201a9ece1a9ad3c"
+    },
+    {
+      "file": "src/impact-fx.js",
+      "bytes": 13982,
+      "sha256": "21689fe673f5f07bbf0cf1af542659b653191164a4eca4b99e095102f1ac104b"
+    },
+    {
+      "file": "src/ingredient-models.js",
+      "bytes": 9490,
+      "sha256": "94542f4be81c835904b9423a865bb770459ba20044cea9a5685257121efb5835"
+    },
+    {
+      "file": "src/ingredient-rules.js",
+      "bytes": 9267,
+      "sha256": "9ca48a29903d7763dab9b21e6db79e457dce4b37fa45b0d0a577eb66c7f77c02"
+    },
+    {
+      "file": "src/main.js",
+      "bytes": 34802,
+      "sha256": "cc62792e3edb6729ae163c9c98efe05ecad4cccde59545e33d5f598c1e693680"
+    },
+    {
+      "file": "src/mcp-client.js",
+      "bytes": 1663,
+      "sha256": "73f9624c4b36c365c2f9eede8113b3412feb0ea87c2b548d7d892bada6cd6cae"
+    },
+    {
+      "file": "src/mcp-loadout.js",
+      "bytes": 5307,
+      "sha256": "69720f2f9ddce3822182fc384600a5982a79e50f80d9839b4df51da1c2379294"
+    },
+    {
+      "file": "src/mcp-menu.js",
+      "bytes": 11629,
+      "sha256": "80698c0948c41b6829fc245ccde45a29b4b632597e71c140f3920b4d046cb99e"
+    },
+    {
+      "file": "src/mcp-price-ui.js",
+      "bytes": 10195,
+      "sha256": "966dd75f7a2a1f3ee2e87171014dde05a74c62211f3365cf4b30b9cedd5cfa26"
+    },
+    {
+      "file": "src/mcp-ui.js",
+      "bytes": 6376,
+      "sha256": "fd9a39fced43f26b4e7ec766d4c8600cb5c7cffa051a4d8f8ad4d976555145e3"
+    },
+    {
+      "file": "src/public-menu-snapshot.js",
+      "bytes": 1532,
+      "sha256": "2e7d897ac8842811bb96911e55d6dde18fb3c29bdc1f767fb3bcb98371826b71"
+    },
+    {
+      "file": "src/single-html-ui.js",
+      "bytes": 2103,
+      "sha256": "89c3135b7dab1358b3bece863d6a1d8b3d2c50199847fea4d60bc61af405acd7"
+    },
+    {
+      "file": "src/style.css",
+      "bytes": 47906,
+      "sha256": "0f3fab6bb5dc373d9f671da04f997818156205e9647e8a3741e9174361ab6c31"
+    },
+    {
+      "file": "tests/economy.test.mjs",
+      "bytes": 7533,
+      "sha256": "091fb6c955891e06ff19cf125979e0dcfc96daa4033b3937b4f57725f791f8db"
+    },
+    {
+      "file": "tests/impact-fx.test.mjs",
+      "bytes": 2563,
+      "sha256": "3e6860fd8631f0b84706e8cd54a7fb2e8ca24b345496cbd17b351d2c083990e0"
+    },
+    {
+      "file": "tests/ingredient-rules.test.mjs",
+      "bytes": 8253,
+      "sha256": "ddbe876ede580b373364c7230329fd5c2ce3a38fb912323c274b2a5ec8ff975f"
+    },
+    {
+      "file": "tests/mcp-menu.test.mjs",
+      "bytes": 10479,
+      "sha256": "342cbceb61d7ebce022e733c7a1377afaf878811b8d4a11235bbed31e3c3bc4c"
+    },
+    {
+      "file": "tests/mcp-price-ui.test.mjs",
+      "bytes": 14859,
+      "sha256": "0f98d9b0397d2339f808e3a216962f89bb4087ff698b19acd245746d0f78dd47"
+    },
+    {
+      "file": "tests/mcp-toon.test.mjs",
+      "bytes": 3432,
+      "sha256": "20e0b0ad1546c97e2fd9c1e1ae319c9ab9f99c4901ead8f4feb119f6f3d52298"
+    },
+    {
+      "file": "tests/mcp-ui.test.mjs",
+      "bytes": 7510,
+      "sha256": "e0c2dfde706b4aa87fea1a03ee8f111cd793aeebbb3c2b93e0788b582346ac45"
+    },
+    {
+      "file": "tests/mcp.test.mjs",
+      "bytes": 13538,
+      "sha256": "93a625894a6ac61ce24f0fd21edddaf6e3e367f2d7e7d2140d74c5e5ce6b2d27"
+    },
+    {
+      "file": "tests/single-html.test.mjs",
+      "bytes": 3287,
+      "sha256": "8f59943667776e92999070ed767ba5cc5b71fa0e2a1f4d1c19c4c3143ca4ac44"
+    },
+    {
+      "file": "vite.config.js",
+      "bytes": 451,
+      "sha256": "833b546113680c70a3cda2a3353c86f9440ce4a35879a973be1c1e8c15a2435d"
+    },
+    {
+      "file": "docs/index.html",
+      "bytes": 651005,
+      "sha256": "9d799c222dff04960ab8339e2d6d2b5a95274802f8c0f65ff7257ac8a7d28abb"
+    },
+    {
+      "file": "docs/.nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": ".gitignore",
+      "bytes": 105,
+      "sha256": "0a28d40f741902447153ff8bfb2fe38c2d64056dadf446f9f8a1cc9fdaf050f2"
+    }
+  ],
+  "excluded": [
+    "dependencies",
+    "build outputs",
+    "local receipts",
+    "credentials",
+    "unused prototypes"
+  ]
+}

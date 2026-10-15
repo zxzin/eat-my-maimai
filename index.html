@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffbc0d" />
+  <meta name="description" content="吃我一发麦麦。配餐装弹，瞄准开火，一场第一人称食物大爆破。" />
+  <title>吃我一发麦麦 · ABC 食物餐厅</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <main class="game-shell" aria-label="吃我一发麦麦，第一人称食物射击游戏">
+    <canvas id="gameCanvas" aria-label="3D 食物战场，拖动瞄准，松手开火"></canvas>
+    <div class="stage-vignette" aria-hidden="true"></div>
+    <div id="targetLabels" aria-hidden="true"></div>
+
+    <div class="global-actions">
+      <button id="soundButton" class="utility-button" type="button" title="切换音效" aria-label="切换音效" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5ZM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button id="helpButton" class="utility-button" type="button" title="玩法说明" aria-label="玩法说明"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M9.5 9a2.5 2.5 0 1 1 4 2c-1 .6-1.5 1-1.5 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="16" r=".8" fill="currentColor"/></svg></button>
+    </div>
+
+    <section id="prepScreen" class="prep-screen" aria-label="配餐装弹">
+      <header class="prep-header"><div class="wordmark" aria-label="吃我一发麦麦 MAIMAI · FOOD FIGHT"><svg viewBox="0 0 66 49" fill="none" aria-hidden="true"><path d="M7 22C8 9 20 4 33 5c15 1 24 7 26 20L7 22Z" fill="currentColor"/><path d="m6 30 11 3 8-3 8 3 9-2 11 3 9-2M9 39c12 5 33 7 48 2" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="m19 15 3 1m11-5 1 3m11 3 3 1" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><div><strong>吃我一发麦麦</strong><span>MAIMAI · FOOD FIGHT</span></div></div><span class="header-caption">把喜欢的餐品，变成你的绝招。</span></header>
+      <div class="prep-story">
+        <div class="mission-stamp"><span>LEVEL 01</span><span>ABC 食物餐厅</span></div>
+        <h1 class="prep-title"><span>今天，</span><span>炸点什么<span class="title-question">？</span></span></h1>
+        <p class="prep-copy">选一餐，装满弹药。<br>瞄准鸡桶堡，打出大动静。</p>
+        <div class="hero-foods" aria-hidden="true"><div class="hero-disc"></div><img id="heroFries" class="hero-fries" alt=""><img id="heroNuggets" class="hero-nuggets" alt=""><img id="heroBurger" class="hero-burger" alt=""><span class="food-sticker">整堡爆破<br><b>BOOM!</b></span></div>
+        <div class="hero-steps"><span><b>01</b> 配餐装弹</span><span><b>02</b> 瞄准发射</span><span><b>03</b> 连消爆破</span></div>
+        <div class="prep-footnote">独立游戏作品</div>
+      </div>
+      <div class="order-ticket">
+        <div class="ticket-header"><div><span class="ticket-eyebrow">BUILD YOUR LOADOUT</span><h2>选餐品，装弹药</h2></div><span class="ticket-number">起始金币<strong>60<span>金币</span></strong></span></div>
+        <div class="menu-head" aria-hidden="true"><span>餐品与食材</span><span>金币</span><span>份数</span></div>
+        <p id="menuReference" class="menu-reference" hidden></p>
+        <div id="packList" class="pack-list" aria-label="选择餐品份数"></div>
+        <div class="ticket-bottom">
+          <div class="loadout-heading"><span>已装入餐盘</span><span class="conversion-note">食材份额为游戏换算</span></div>
+          <div id="loadoutPreview" class="loadout-preview" aria-label="已选餐品"></div>
+          <div class="cart-bar"><div class="supply-total"><span>金币</span><div><strong id="supplyUsed">0</strong><span>/ 60</span></div></div><button id="startButton" class="start-button" type="button"><span>开始行动</span><svg viewBox="0 0 42 20" fill="none" aria-hidden="true"><path d="M1 10h36M28 2l10 8-10 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+          <div class="connection-row"><button id="dataButton" class="data-button" type="button"><span class="status-dot"></span><span id="mcpBadge">连接麦当劳 MCP</span><span aria-hidden="true">↗</span></button><span class="independent-note">独立游戏作品</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="battleHud" class="battle-hud" aria-label="战斗状态" hidden>
+      <div class="battle-mission"><span class="battle-kicker">01 / ABC 食物餐厅</span><div class="battle-progress"><span>已清除</span><strong id="roundProgress">0 / 3</strong></div></div>
+      <div class="battle-wallet" aria-label="本局金币"><span class="coin-symbol" aria-hidden="true">●</span><strong id="coinCount">0</strong><span>金币</span></div>
+      <button id="shopButton" class="shop-button" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 4h2l2.3 11h11.8l2-8H6M9 20h.01M18 20h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>补给商店</span><span class="shop-key" aria-hidden="true">B</span></button>
+      <button id="backToPrep" class="back-to-prep" type="button"><span aria-hidden="true">↶</span> 重开配餐</button>
+      <div id="crosshair" class="crosshair" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+      <div id="aimLabel" class="aim-label">拖动瞄准 · 松手开火</div>
+      <div id="comboLabel" class="combo-label" role="status" aria-live="polite"></div>
+      <div id="weaponReadout" class="weapon-readout" aria-label="当前装填物资" hidden><img id="weaponIcon" alt=""><div class="weapon-readout-copy"><span class="weapon-readout-caption">已装填</span><strong id="weaponName">面包片</strong></div><div class="weapon-readout-count"><strong id="weaponCount">0</strong><span>发</span></div></div>
+      <div id="ammoEmptyHint" class="ammo-empty-hint" role="status" hidden><strong>弹药用完了</strong><span>打开补给商店，再装一餐。</span></div>
+      <div id="coinFlyLayer" class="coin-fly-layer" aria-hidden="true"></div>
+      <div class="combat-loadout"><div class="combat-loadout-heading"><span>你的餐盘</span><span id="shotsCount">0 发</span></div><div id="ingredientBar" class="ingredient-bar" aria-label="切换出战餐品"></div></div>
+      <span class="battle-corner-note">MAIMAI · FOOD FIGHT / 食物大爆破</span>
+    </section>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="loading" class="loading"><svg viewBox="0 0 66 49" fill="none" aria-hidden="true"><path d="M7 22C8 9 20 4 33 5c15 1 24 7 26 20L7 22Z" fill="currentColor"/><path d="m6 30 11 3 8-3 8 3 9-2 11 3 9-2M9 39c12 5 33 7 48 2" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg><span>后厨备餐中…</span></div>
+  </main>
+
+  <dialog id="helpDialog" class="game-dialog">
+    <button class="dialog-close" type="button" data-close aria-label="关闭玩法说明">×</button><span class="dialog-eyebrow">FIELD GUIDE</span><h2>开饭，也是开战。</h2>
+    <ol class="help-steps"><li><span>01</span><div><strong>配餐装弹</strong><p>开局前选择餐品与份数。汉堡可以整只装成炸弹，也可以拆成食材；每份只能选一种用途。金币仅用于本局游戏。</p></div></li><li><span>02</span><div><strong>瞄准，就开火</strong><p>手指或鼠标在战场上拖动瞄准，松手发射。准星始终指向你要打的位置。</p></div></li><li><span>03</span><div><strong>换一招，再来一发</strong><p>同类食材命中会连消。肉饼＋面包合成汉堡；番茄酱＋面包、薯条＋番茄酱触发组合爆破。整堡炸弹清除一片。消除食物获得金币，随时打开补给商店购买新餐品，继续装弹。</p></div></li></ol>
+    <button type="button" class="primary-button" data-close>好，开打</button>
+  </dialog>
+  <dialog id="resultDialog" class="game-dialog result-dialog">
+    <button class="dialog-close" type="button" data-close aria-label="关闭战绩">×</button><span id="resultEyebrow" class="dialog-eyebrow">BATTLE RECEIPT</span><h2 id="resultTitle">鸡桶堡，拿下！</h2><p id="resultDetail" class="dialog-intro">一份套餐，打出了一场大动静。</p><div id="resultStats" class="result-stats"></div><div class="result-actions"><button id="retryButton" class="primary-button" type="button">重新配餐</button><button id="shareButton" class="secondary-button" type="button">复制战报</button></div><p class="receipt-footnote">MAIMAI · FOOD FIGHT · 01 鸡桶堡</p>
+  </dialog>
+  <dialog id="shopDialog" class="game-dialog shop-dialog" aria-labelledby="shopTitle">
+    <header class="shop-header"><div><span class="dialog-eyebrow">FRESH AMMO, COMING UP</span><h2 id="shopTitle">补给商店</h2><p>再来一餐，接着开火。</p></div><button id="shopClose" class="shop-close" type="button" aria-label="关闭商店，继续射击">×</button><div class="shop-wallet"><span class="coin-symbol" aria-hidden="true">●</span><strong id="shopBalance">0</strong><span>金币</span></div></header>
+    <div class="shop-list-heading"><span>选餐品，补充弹药</span><span>购买后立即装入餐盘</span></div>
+    <div id="shopList" class="shop-list" aria-label="可购买的补给餐品"></div>
+    <footer class="shop-footer"><div class="shop-footer-copy"><p id="shopMessage" role="status" aria-live="polite">击中并消除食物，即可赚取金币。</p><span>金币仅用于本局游戏</span></div><button id="shopContinue" class="primary-button" type="button"><span>继续射击</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-5-5 5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></footer>
+  </dialog>
+    <dialog id="dataDialog" class="game-dialog data-dialog">
+      <button class="dialog-close" type="button" data-close aria-label="关闭连接面板">×</button>
+      <span class="dialog-eyebrow">MENU → AMMO</span><h2>让真餐品，变成弹药。</h2>
+      <div class="data-status"><span class="status-dot"></span><strong id="mcpStatus">尚未连接</strong></div>
+      <details id="mcpCredentials" class="mcp-credentials" open><summary>账号连接设置</summary>
+      <p>先在麦当劳官方平台登录并激活 MCP，再把个人 Token 填到这里。它仅保留在本机服务内存中。</p>
+      <a class="official-link" href="https://open.mcd.cn/mcp" target="_blank" rel="noopener noreferrer">打开麦当劳官方授权页面 ↗</a>
+      <form id="mcpForm"><label for="mcpToken">个人 Token</label><input id="mcpToken" type="password" autocomplete="off" spellcheck="false" placeholder="仅在这里填写，提交后清空"><button id="mcpConnect" type="submit" class="primary-button">连接并同步餐品</button></form>
+      </details>
+      <p id="mcpMessage" role="status" aria-live="polite">演示模式可以直接玩。首次授权由你在官方页面完成。</p>
+      <div id="mcpFoods" class="mcp-foods" hidden></div>
+      <div class="mcp-actions"><button id="mcpSync" type="button" class="secondary-button" disabled>重新同步</button><button id="mcpDisconnect" type="button" class="secondary-button" disabled>断开连接</button></div>
+      <section class="store-menu" aria-labelledby="storeMenuTitle">
+        <h3 id="storeMenuTitle">上海门店 · 餐品参考价</h3>
+        <p class="data-note">选择附近地标，查看到店自取菜单。人民币价格供参考；游戏补给使用金币。</p>
+        <form id="storeSearchForm" class="store-search"><label for="storeKeyword">上海地标或门店名称</label><div><input id="storeKeyword" value="人民广场" maxlength="80" autocomplete="off"><button id="storeSearchButton" type="submit" class="secondary-button" disabled>查找门店</button></div></form>
+        <label class="store-select-label" for="storeSelect">参考门店</label><select id="storeSelect" disabled><option>连接后选择门店</option></select>
+        <div class="mcp-actions"><button id="menuSyncButton" type="button" class="secondary-button" disabled>同步门店菜单</button><button id="quoteButton" type="button" class="secondary-button" disabled>核对本次配餐价格</button></div>
+        <p id="menuMessage" role="status" aria-live="polite">连接 MCP 后，可同步上海门店菜单与价格。</p>
+        <div class="menu-source"><strong id="menuStoreLabel">等待选择参考门店</strong><span id="menuUpdatedAt"></span></div>
+        <div id="menuResults" class="menu-results" hidden></div><p id="quoteResult" class="quote-result" role="status" aria-live="polite"></p>
+      </section>
+      <p class="data-note">官方目录与门店菜单用于匹配餐品。可调整食材按官方返回展示；弹药数量、金币与技能是游戏设定。</p>
+      <button class="primary-button" type="button" data-close>回到配餐台</button>
+    </dialog>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
