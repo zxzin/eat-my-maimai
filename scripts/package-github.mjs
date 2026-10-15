@@ -46,6 +46,7 @@ async function walk(base, directory = '') {
   const entries = await fs.readdir(path.join(base, directory), { withFileTypes: true });
   const files = [];
   for (const entry of entries) {
+    if (!directory && entry.name === '.git' && entry.isDirectory()) continue;
     const relative = path.posix.join(directory, entry.name);
     if (entry.isSymbolicLink()) throw new Error(`Public output contains a symbolic link: ${relative}`);
     if (entry.isDirectory()) files.push(...await walk(base, relative));

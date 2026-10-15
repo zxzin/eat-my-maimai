@@ -93,7 +93,7 @@ node scripts/package-github.mjs
 
 资料与参考：[数据和模型来源](docs/SOURCES.md)、[第三方许可](THIRD_PARTY_NOTICES.md)。
 
-赛事：[麦当劳程序员创意开发大赛](https://github.com/M-China/mcd-developer-innovation-challenge)。参赛声明见 [CONTEST_DECLARATION.md](CONTEST_DECLARATION.md)。当前处于本地准备阶段，正式报名成功以主办方 Issue 回执为准。
+赛事：[麦当劳程序员创意开发大赛](https://github.com/M-China/mcd-developer-innovation-challenge)。参赛声明见 [CONTEST_DECLARATION.md](CONTEST_DECLARATION.md)。源码已上传私有待审仓库；公开及正式报名待最终确认，报名成功以主办方 Issue 回执为准。
 
 ## 开源许可
 

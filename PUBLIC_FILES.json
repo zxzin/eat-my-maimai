@@ -1,6 +1,6 @@
 {
   "format": "maimai-public-source-package",
-  "preparedAt": "2026-10-15T13:44:46.479Z",
+  "preparedAt": "2026-10-15T13:49:30.187Z",
   "publication": "local-only",
   "files": [
     {
@@ -25,8 +25,8 @@
     },
     {
       "file": "README.md",
-      "bytes": 5749,
-      "sha256": "8051ef3690c3a9c85c97202881a590c4e3112953aa228e362f3bf92552e8977c"
+      "bytes": 5785,
+      "sha256": "f0009fb9af92588eb90c867e4e3d2b1f4425aa3b77fde470c4e20fdfc2255c8c"
     },
     {
       "file": "THIRD_PARTY_NOTICES.md",
@@ -35,8 +35,8 @@
     },
     {
       "file": "docs/CONTEST_CHECKLIST.md",
-      "bytes": 4794,
-      "sha256": "1d5f364863c1c9984fe2bd8580125b9b44ed0a4d516ad4821a05dacee4317690"
+      "bytes": 4786,
+      "sha256": "90f74d84d5258d8d404bf25abb3e120acd4689a34f734127736fae60bb5eaa22"
     },
     {
       "file": "docs/SOURCES.md",
@@ -95,8 +95,8 @@
     },
     {
       "file": "scripts/package-github.mjs",
-      "bytes": 7483,
-      "sha256": "adc12ca4ce96b7fc1a8f91fa0a0f09781e03713c2b65efc317cf142e93420ccf"
+      "bytes": 7561,
+      "sha256": "009569a94cde9c3c4d3d4253dca393921cafe95258697fbea0d0e5f42a86e251"
     },
     {
       "file": "scripts/shooter-check.mjs",
@@ -105,8 +105,8 @@
     },
     {
       "file": "scripts/single-html-check.mjs",
-      "bytes": 6084,
-      "sha256": "85ac69adb83488c079af6569f85064f0df94fa00353ff8c1654a7dec3b5b4ec1"
+      "bytes": 8193,
+      "sha256": "a962b80d8a1ac02ca1dabfa764a42c5bc7b0d485005833a527f2fb24509b8126"
     },
     {
       "file": "scripts/sync-public-menu.mjs",

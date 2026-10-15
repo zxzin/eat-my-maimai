@@ -32,9 +32,32 @@ try {
     assert.equal(await page.title(), '吃我一发麦麦 · ABC 食物餐厅');
     assert.equal(await page.locator('input[type="password"], #mcpToken, #mcpConnect').count(), 0);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    const publicSnapshot = await page.evaluate(() => window.__MAIMAI_PUBLIC_SNAPSHOT__);
+    const priceChecks = [];
+    if (publicSnapshot) {
+      assert.equal(await page.locator('#menuReference').isVisible(), true, 'the public store and retrieval time are shown');
+      const sourceText = await page.locator('#menuReference').textContent();
+      assert.ok(sourceText.includes(publicSnapshot.store.name));
+      const expectedStamp = await page.evaluate(value => new Date(value).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }), publicSnapshot.retrievedAt);
+      assert.ok(sourceText.includes(expectedStamp), 'the exact snapshot retrieval time is visible');
+      for (const product of publicSnapshot.products.filter(product => Number.isFinite(product.publicPriceYuan))) {
+        const price = page.locator(`[data-pack="${product.packId}"] .reference-price`);
+        await price.scrollIntoViewIfNeeded();
+        const expected = `门店参考 ¥${product.publicPriceYuan.toFixed(2)}`;
+        assert.equal(await price.textContent(), expected);
+        const bounds = await price.boundingBox();
+        assert.ok(bounds && bounds.x >= 0 && bounds.y >= 0 && bounds.x + bounds.width <= width + 1 && bounds.y + bounds.height <= height + 1, 'each reference price scrolls fully into the viewport');
+        priceChecks.push({ packId: product.packId, displayed: expected });
+      }
+      await page.locator('#packList').evaluate(list => { list.scrollTop = 0; });
+    }
     await tap(page.locator('#dataButton'));
     await page.locator('#dataDialog[open]').waitFor();
     assert.match(await page.locator('#mcpStatus').textContent(), /离线|快照/);
+    if (publicSnapshot) {
+      assert.ok((await page.locator('#mcpMessage').textContent()).includes(publicSnapshot.store.name));
+      assert.equal(await page.locator('#mcpFoods span').count(), publicSnapshot.products.length);
+    }
     await tap(page.locator('#dataDialog [data-close]').last());
     await page.screenshot({ path: path.join(artifactDir, `single-html-prep-${width}x${height}.png`) });
     await tap(page.locator('#startButton'));
@@ -63,6 +86,9 @@ try {
     assert.ok(afterShot.coins > before.coins);
     await tap(page.locator('#shopButton'));
     await page.locator('#shopDialog[open]').waitFor();
+    if (publicSnapshot) for (const product of publicSnapshot.products.filter(product => Number.isFinite(product.publicPriceYuan))) {
+      assert.equal(await page.locator(`[data-shop-pack="${product.packId}"] .reference-price`).textContent(), `门店参考 ¥${product.publicPriceYuan.toFixed(2)}`);
+    }
     const buy = page.locator('[data-shop-pack="fries"] [data-buy]');
     assert.equal(await buy.isEnabled(), true);
     await tap(buy);
@@ -76,7 +102,7 @@ try {
     assert.deepEqual(errors, []);
     const externalRequests = requests.filter(url => !url.startsWith('file:') && !url.startsWith('data:') && !url.startsWith('blob:'));
     assert.deepEqual(externalRequests, [], 'single HTML makes no network request while playing and shopping');
-    reports.push({ viewport: `${width}x${height}`, input: touch ? 'Chromium touch emulation' : 'desktop mouse', bootMs, shots: afterBuy.shots, removed: afterBuy.removed, coins: afterBuy.coins, publicSnapshot: await page.evaluate(() => Boolean(window.__MAIMAI_PUBLIC_SNAPSHOT__)), networkRequests: externalRequests.length, pageErrors: errors, scene: await page.evaluate(() => window.__burgerGame.sceneStats) });
+    reports.push({ viewport: `${width}x${height}`, input: touch ? 'Chromium touch emulation' : 'desktop mouse', bootMs, shots: afterBuy.shots, removed: afterBuy.removed, coins: afterBuy.coins, publicSnapshot: Boolean(publicSnapshot), snapshotStore: publicSnapshot?.store?.name ?? null, snapshotRetrievedAt: publicSnapshot?.retrievedAt ?? null, priceChecks, networkRequests: externalRequests.length, pageErrors: errors, scene: await page.evaluate(() => window.__burgerGame.sceneStats) });
     await context.close();
   }
   assert.deepEqual(await fs.readFile(htmlPath), html, 'the single HTML stays unchanged throughout all offline device checks');
