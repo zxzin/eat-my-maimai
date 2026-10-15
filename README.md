@@ -2,7 +2,9 @@
 
 配一餐，装上膛。把面包、薯条和鸡块变成弹药，用第一人称视角玩食材连消。
 
-单文件试玩已包含在 [`docs/index.html`](docs/index.html)。下载后用浏览器打开；公开试玩网址待部署后补充。
+**[打开在线试玩](https://zxzin.github.io/eat-my-maimai/)** · [单 HTML 文件](docs/index.html)
+
+手机与电脑均可进入，下载单文件后也能离线游玩。
 
 一款适合电脑和手机试玩的独立 3D 小游戏：玩家选择餐品配置弹药，在虚构的 ABC 食物餐厅中触发同类消除和食材组合，赚取金币、随时补给。麦当劳 MCP 为配装提供真实餐品数据。
 
@@ -93,7 +95,7 @@ node scripts/package-github.mjs
 
 资料与参考：[数据和模型来源](docs/SOURCES.md)、[第三方许可](THIRD_PARTY_NOTICES.md)。
 
-赛事：[麦当劳程序员创意开发大赛](https://github.com/M-China/mcd-developer-innovation-challenge)。参赛声明见 [CONTEST_DECLARATION.md](CONTEST_DECLARATION.md)。源码已上传私有待审仓库；公开及正式报名待最终确认，报名成功以主办方 Issue 回执为准。
+赛事：[麦当劳程序员创意开发大赛](https://github.com/M-China/mcd-developer-innovation-challenge)。参赛声明见 [CONTEST_DECLARATION.md](CONTEST_DECLARATION.md)。源码已按 MIT 许可公开，在线试玩由 GitHub Pages 提供；正式报名成功以主办方 Issue 回执为准。
 
 ## 开源许可
 

@@ -38,7 +38,7 @@
           <div class="loadout-heading"><span>已装入餐盘</span><span class="conversion-note">食材份额为游戏换算</span></div>
           <div id="loadoutPreview" class="loadout-preview" aria-label="已选餐品"></div>
           <div class="cart-bar"><div class="supply-total"><span>金币</span><div><strong id="supplyUsed">0</strong><span>/ 60</span></div></div><button id="startButton" class="start-button" type="button"><span>开始行动</span><svg viewBox="0 0 42 20" fill="none" aria-hidden="true"><path d="M1 10h36M28 2l10 8-10 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-          <div class="connection-row"><button id="dataButton" class="data-button" type="button"><span class="status-dot"></span><span id="mcpBadge">连接麦当劳 MCP</span><span aria-hidden="true">↗</span></button><span class="independent-note">独立游戏作品</span></div>
+          <div class="connection-row"><button id="dataButton" class="data-button" type="button"><span class="status-dot"></span><span id="mcpBadge">连接麦当劳 MCP</span><span aria-hidden="true">↗</span></button><a class="independent-note" href="https://github.com/zxzin/eat-my-maimai" target="_blank" rel="noopener noreferrer" aria-label="打开游戏 GitHub 仓库">GitHub ↗</a></div>
         </div>
       </div>
     </section>
@@ -67,7 +67,7 @@
     <button type="button" class="primary-button" data-close>好，开打</button>
   </dialog>
   <dialog id="resultDialog" class="game-dialog result-dialog">
-    <button class="dialog-close" type="button" data-close aria-label="关闭战绩">×</button><span id="resultEyebrow" class="dialog-eyebrow">BATTLE RECEIPT</span><h2 id="resultTitle">鸡桶堡，拿下！</h2><p id="resultDetail" class="dialog-intro">一份套餐，打出了一场大动静。</p><div id="resultStats" class="result-stats"></div><div class="result-actions"><button id="retryButton" class="primary-button" type="button">重新配餐</button><button id="shareButton" class="secondary-button" type="button">复制战报</button></div><p class="receipt-footnote">MAIMAI · FOOD FIGHT · 01 鸡桶堡</p>
+    <button class="dialog-close" type="button" data-close aria-label="关闭战绩">×</button><span id="resultEyebrow" class="dialog-eyebrow">BATTLE RECEIPT</span><h2 id="resultTitle">鸡桶堡，拿下！</h2><p id="resultDetail" class="dialog-intro">一份套餐，打出了一场大动静。</p><div id="resultStats" class="result-stats"></div><div class="result-actions"><button id="retryButton" class="primary-button" type="button">重新配餐</button><button id="shareButton" class="secondary-button" type="button">复制战报</button></div><a class="receipt-star" href="https://github.com/zxzin/eat-my-maimai" target="_blank" rel="noopener noreferrer">喜欢这局？给麦麦一个 Star ↗</a><p class="receipt-footnote">MAIMAI · FOOD FIGHT · 01 鸡桶堡</p>
   </dialog>
   <dialog id="shopDialog" class="game-dialog shop-dialog" aria-labelledby="shopTitle">
     <header class="shop-header"><div><span class="dialog-eyebrow">FRESH AMMO, COMING UP</span><h2 id="shopTitle">补给商店</h2><p>再来一餐，接着开火。</p></div><button id="shopClose" class="shop-close" type="button" aria-label="关闭商店，继续射击">×</button><div class="shop-wallet"><span class="coin-symbol" aria-hidden="true">●</span><strong id="shopBalance">0</strong><span>金币</span></div></header>

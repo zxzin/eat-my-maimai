@@ -29,7 +29,11 @@
 
 ## 体验入口
 
-当前已有单 HTML 文件。小红书笔记通常需要展示可访问的体验方式，HTML 文件本身不等于已上线的网站。上线后再补充实际试玩地址和 GitHub 项目入口，当前不填写虚构链接。
+在线试玩：https://zxzin.github.io/eat-my-maimai/
+
+GitHub：https://github.com/zxzin/eat-my-maimai
+
+已备好单 HTML 文件，可由在线页试玩或下载后离线运行。发布时按平台实际允许的入口形式展示链接，尚未在小红书中验证打开效果。
 
 ## 配图与录屏顺序
 

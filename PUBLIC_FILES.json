@@ -1,6 +1,6 @@
 {
   "format": "maimai-public-source-package",
-  "preparedAt": "2026-10-15T13:49:30.187Z",
+  "preparedAt": "2026-10-15T13:53:11.493Z",
   "publication": "local-only",
   "files": [
     {
@@ -25,8 +25,8 @@
     },
     {
       "file": "README.md",
-      "bytes": 5785,
-      "sha256": "f0009fb9af92588eb90c867e4e3d2b1f4425aa3b77fde470c4e20fdfc2255c8c"
+      "bytes": 5823,
+      "sha256": "be114655dbfed721da3fa429d30f869b53973bcead1445b2ca414a1375a0f46b"
     },
     {
       "file": "THIRD_PARTY_NOTICES.md",
@@ -35,8 +35,8 @@
     },
     {
       "file": "docs/CONTEST_CHECKLIST.md",
-      "bytes": 4786,
-      "sha256": "90f74d84d5258d8d404bf25abb3e120acd4689a34f734127736fae60bb5eaa22"
+      "bytes": 4777,
+      "sha256": "67cd7488515ec3876861d05b24e407cc441ac1fca89262f6d0b56a73f6141264"
     },
     {
       "file": "docs/SOURCES.md",
@@ -45,8 +45,8 @@
     },
     {
       "file": "docs/XIAOHONGSHU_DRAFT.md",
-      "bytes": 2160,
-      "sha256": "3620aadabc5e8434fc8e60369055d9f5b883996a926debec253e5333852198ed"
+      "bytes": 2212,
+      "sha256": "38b981ddfc186e2a990aea9ad5772c54703c3896d3c9fe976409be3cb3d136fd"
     },
     {
       "file": "docs/screenshots/gameplay.png",
@@ -60,8 +60,8 @@
     },
     {
       "file": "index.html",
-      "bytes": 13512,
-      "sha256": "b3e2b781f18324836cc2401a77c7cbcfabf97fee46b97be18f48ce9e423a1db8"
+      "bytes": 13781,
+      "sha256": "187ed8d98c6ee80fdc8ecbfee0b61878cf0ff1bed4d35064643644b3f59c96ae"
     },
     {
       "file": "mcp-config.example.json",
@@ -190,8 +190,8 @@
     },
     {
       "file": "src/style.css",
-      "bytes": 47906,
-      "sha256": "0f3fab6bb5dc373d9f671da04f997818156205e9647e8a3741e9174361ab6c31"
+      "bytes": 48160,
+      "sha256": "11fb59b5a2621335db30650e5f448b55fa8ecada34fd3e2cacb69a1c4ec17e9f"
     },
     {
       "file": "tests/economy.test.mjs",
@@ -245,8 +245,8 @@
     },
     {
       "file": "docs/index.html",
-      "bytes": 651005,
-      "sha256": "9d799c222dff04960ab8339e2d6d2b5a95274802f8c0f65ff7257ac8a7d28abb"
+      "bytes": 651526,
+      "sha256": "e4dabeb8f98ad01249279465342ee2d0397ec490554298c3a85455b02915c34d"
     },
     {
       "file": "docs/.nojekyll",
