@@ -5,6 +5,9 @@ import { INGREDIENTS, PACKS, MAX_PACKS, buildInventory } from './ingredient-rule
 export const START_COINS = 60;
 export const COINS_PER_BLOCK = 3;
 export const COMBO_BONUS = 3;
+export const STARTER_CORN = 120;
+export const CORN_REFILL_COST = 6;
+export const CORN_REFILL_AMOUNT = 80;
 
 const ingredientIds = new Set(INGREDIENTS.map(({ id }) => id));
 const packById = new Map(PACKS.map(pack => [pack.id, pack]));
@@ -89,11 +92,33 @@ export function purchasePack(state, inventory, { id, mode = 'split', quantity = 
 
 /** Charge the initial selected loadout once, immediately before battle starts. */
 export function payLoadout(state, selection, { allowedPackIds } = {}) {
-  return transact(state, emptyInventory(), selection, allowedPackIds);
+  const inventory = emptyInventory();
+  if (state?.loadoutPaid) return failed(state, inventory, '本局配餐已经装填完成');
+  const paid = transact(state, inventory, selection, allowedPackIds);
+  if (!paid.ok) return paid;
+  return { ...paid, state: { ...paid.state, loadoutPaid: true },
+    inventory: { ...paid.inventory, corn: STARTER_CORN },
+    added: { ...paid.added, corn: STARTER_CORN } };
 }
 
-/** Empty ammunition is recoverable while any available pack is affordable. */
+/** Game corn is always available independently of the reference product menu. */
+export function purchaseCorn(state, inventory) {
+  if (!validState(state)) return failed(state, inventory, '金币状态无效，请重新开始本局');
+  if (!inventoryIsValid(inventory)) return failed(state, inventory, '弹药数量无效，请重新开始本局');
+  if (state.coins < CORN_REFILL_COST) return failed(state, inventory, `金币不足，还差 ${CORN_REFILL_COST - state.coins} 金币`);
+  if (!validCount(state.spent + CORN_REFILL_COST)) return failed(state, inventory, '本局消费已达上限');
+  const corn = (inventory.corn ?? 0) + CORN_REFILL_AMOUNT;
+  if (!validCount(corn)) return failed(state, inventory, '弹药数量已达上限');
+  return { ok: true,
+    state: { ...state, coins: state.coins - CORN_REFILL_COST, spent: state.spent + CORN_REFILL_COST, rewardedIds: [...state.rewardedIds] },
+    inventory: { ...emptyInventory(), ...inventory, corn },
+    added: { ...emptyInventory(), corn: CORN_REFILL_AMOUNT }, spent: CORN_REFILL_COST, error: null };
+}
+
+/** Empty ammunition is recoverable while corn or an available pack is affordable. */
 export function canRestock(state, allowedPackIds) {
+  if (!validState(state)) return false;
+  if (state.coins >= CORN_REFILL_COST) return true;
   const access = menuAccess(allowedPackIds);
-  return validState(state) && access.ok && PACKS.some(pack => (!access.ids || access.ids.has(pack.id)) && pack.cost <= state.coins);
+  return access.ok && PACKS.some(pack => (!access.ids || access.ids.has(pack.id)) && pack.cost <= state.coins);
 }

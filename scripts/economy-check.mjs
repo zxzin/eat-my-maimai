@@ -3,17 +3,20 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
-import { INGREDIENTS, PACKS, buildInventory, resolveHit } from '../src/ingredient-rules.js';
+import { INGREDIENTS, PACKS, buildInventory } from '../src/ingredient-rules.js';
+import { STARTER_CORN } from '../src/economy.js';
+import { resolveStageHit } from '../src/stage-rules.js';
+import { auditPrepUI, auditBattleUI, auditShopUI } from './ui-checks.mjs';
 
 const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--enable-webgl', '--ignore-gpu-blocklist'] });
-const errors = [], reports = [];
+const errors = [], reports = [], uiChecks = new Map();
 await fs.mkdir('artifacts', { recursive: true });
 async function collectFiles(directory) {
   const entries = await fs.readdir(directory, { withFileTypes: true });
   const nested = await Promise.all(entries.map(entry => entry.isDirectory() ? collectFiles(path.join(directory, entry.name)) : path.join(directory, entry.name)));
   return nested.flat();
 }
-const sourceFiles = [...await collectFiles('src'), ...await collectFiles('server'), ...await collectFiles('public'), 'index.html', 'vite.config.js', 'package.json', 'package-lock.json', 'scripts/economy-check.mjs'].sort();
+const sourceFiles = [...await collectFiles('src'), ...await collectFiles('server'), ...await collectFiles('public'), 'index.html', 'vite.config.js', 'package.json', 'package-lock.json', 'scripts/economy-check.mjs', 'scripts/ui-checks.mjs'].sort();
 async function sourceHashes() {
   return Object.fromEntries(await Promise.all(sourceFiles.map(async file => [file, createHash('sha256').update(await fs.readFile(file)).digest('hex')])));
 }
@@ -31,14 +34,18 @@ async function ready(page, touch = false) {
   assert.equal((await state(page)).coins, 60, 'the round starts with sixty game coins');
   const loadout = buildInventory(await page.evaluate(() => window.__burgerGame.selection));
   assert.equal(loadout.spent, 56);
+  const ui = { prep: await auditPrepUI(page) };
+  uiChecks.set(page, ui);
+  await page.screenshot({ path: `artifacts/economy-prep-${page.viewportSize().width}x${page.viewportSize().height}.png` });
   await tapOrClick(page.locator('#startButton'), touch);
   await page.waitForFunction(() => window.__burgerGame.state.phase === 'battle');
   const initial = await state(page);
   assert.equal(initial.coins, 4, 'starting battle pays for the prepared packs');
   assert.equal(initial.spent, 56);
   assert.equal(initial.earned, 0);
-  assert.deepEqual(initial.inventory, loadout.inventory);
+  assert.deepEqual(initial.inventory, {...loadout.inventory, corn: STARTER_CORN});
   await checkReadout(page);
+  ui.battle = await auditBattleUI(page);
   return initial;
 }
 async function checkReadout(page) {
@@ -49,10 +56,10 @@ async function checkReadout(page) {
   assert.equal(60 + snapshot.earned - snapshot.spent, snapshot.coins, 'every visible balance reconciles with earned and spent coins');
 }
 async function candidates(page) {
-  const [snapshot, allNodes, targets] = await Promise.all([state(page), nodes(page), visibleTargets(page)]), choices = [];
+  const [snapshot, allNodes, targets, setpieces] = await Promise.all([state(page), nodes(page), visibleTargets(page), page.evaluate(() => window.__burgerGame.setpieces)]), choices = [];
   for (const [ammo, count] of Object.entries(snapshot.inventory)) {
     if (!count) continue;
-    for (const target of targets) choices.push({ ammo, target, outcome: resolveHit({ ammo, target: allNodes.find(node => node.id === target.id), neighbors: allNodes }) });
+    for (const target of targets) choices.push({ ammo, target, outcome: resolveStageHit({ ammo, target: allNodes.find(node => node.id === target.id), neighbors: allNodes, setpieces }) });
   }
   return choices.sort((a, b) => b.outcome.removeIds.length - a.outcome.removeIds.length);
 }
@@ -75,7 +82,7 @@ async function releaseShot(page, choice, touch) {
   return before;
 }
 async function finishShot(page, before, ammo) {
-  await page.waitForFunction(() => window.__burgerGame.state.projectiles === 0, null, { timeout: 10000 });
+  await page.waitForFunction(() => window.__burgerGame.state.projectiles === 0 && window.__burgerGame.state.pendingBursts === 0, null, { timeout: 10000 });
   const after = await state(page), removed = after.removed - before.removed;
   assert.equal(after.phase, 'battle', 'economy checks stay inside the active round');
   const comboBonus = ammo !== 'burgerbomb' && after.combos > before.combos ? 3 : 0;
@@ -151,6 +158,7 @@ try {
   const initial = await ready(page);
   await page.screenshot({ path: 'artifacts/economy-desktop-ready.png' });
   await openShop(page);
+  uiChecks.get(page).shop = await auditShopUI(page);
   assert.equal(await page.locator('#shopList [data-buy]:enabled').count(), 0, 'four coins cannot buy a pack');
   const disabled = await state(page);
   await page.waitForTimeout(200);
@@ -191,7 +199,7 @@ try {
   const resumed = await finishShot(page, beforePausedShot, pauseChoice.ammo);
   assert.equal((await state(page)).shots, beforePausedShot.shots + 1, 'closing the store resumes exactly the existing shot');
   await page.screenshot({ path: 'artifacts/economy-desktop-resumed.png' });
-  reports.push({ device: 'desktop mouse and keyboard', initial, matchReceipt, comboReceipt, fries, topups, whole, pausedShot: resumed, final: await state(page) });
+  reports.push({ device: 'desktop mouse and keyboard', ui: uiChecks.get(page), initial, matchReceipt, comboReceipt, fries, topups, whole, pausedShot: resumed, final: await state(page) });
   await page.close();
 
   for (const [width, height] of [[390, 844], [844, 390], [360, 640]]) {
@@ -200,7 +208,7 @@ try {
     const shopButton = await p.locator('#shopButton').boundingBox();
     assert.ok(shopButton.width >= 44 && shopButton.height >= 44);
     const earned = await earnUntil(p, 10, true);
-    await openShop(p, true); const bounds = await touchBounds(p, width, height);
+    await openShop(p, true); uiChecks.get(p).shop = await auditShopUI(p); const bounds = await touchBounds(p, width, height);
     const bought = await purchase(p, 'fries', 'split', true);
     await p.screenshot({ path: `artifacts/economy-mobile-shop-${width}x${height}.png` });
     await closeShop(p, true);
@@ -211,7 +219,7 @@ try {
     const readout = await p.locator('#weaponReadout').boundingBox();
     assert.ok(readout.x >= 0 && readout.x + readout.width <= width + .5 && readout.y >= 0 && readout.y + readout.height <= height + .5, 'gun readout remains legible inside the viewport');
     await p.screenshot({ path: `artifacts/economy-mobile-continued-${width}x${height}.png` });
-    reports.push({ device: `touch ${width}x${height}`, earned, bought, continued, bounds, readout, final: await state(p) });
+    reports.push({ device: `touch ${width}x${height}`, ui: uiChecks.get(p), earned, bought, continued, bounds, readout, final: await state(p) });
     await context.close();
   }
   assert.deepEqual(errors, []);

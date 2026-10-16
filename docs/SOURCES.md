@@ -17,11 +17,11 @@
 
 ## 当前模型和场景
 
-`src/food-models.js` 与 `src/ingredient-models.js` 使用 Three.js 几何体、材质、程序生成纹理构建玩具风格食物、包装及发射器。配餐图片由这些本地 3D 模型渲染生成；建筑、光照与布局由 `src/main.js` 组织，酱汁和碎屑效果由 `src/impact-fx.js` 生成。
+`src/food-models.js` 与 `src/ingredient-models.js` 使用 Three.js 几何体、材质、程序生成纹理构建玩具风格食物、包装及发射器。配餐图片由这些本地 3D 模型渲染生成；多层餐厅与三机关由 `src/restaurant-stage.js` 构建，光照与镜头由 `src/main.js` 组织。酱汁和碎屑由 `src/impact-fx.js` 生成，漫画爆光、环形冲击与分层音效由 `src/combat-feedback.js` 生成。
 
-ABC 是本游戏的虚构食物餐厅名称。建筑由概括的面包、肉饼、鸡块、薯条、酱汁、蛋挞、纸桶等食物与包装形态组成。其支撑、碰撞、消除和组合效果属于游戏创作。
+KFB 是本游戏的虚构食物餐厅名称。建筑由概括的面包、肉饼、鸡块、薯条、酱汁、蛋挞、纸桶等食物与包装形态组成。其支撑、碰撞、消除和组合效果属于游戏创作。
 
-早期食品外形研究参考过[肯德基中国官网](https://www.kfc.com.cn/)及[百胜中国的食品介绍](https://ir.yumchina.com/static-files/d9d4333b-d3c5-4640-8876-9d11034e0dd6)。保留链接用于说明研究出处；当前公开关卡与文案统一使用虚构 ABC，未将上述品牌的图片或模型导入游戏。
+早期食品外形研究参考过[肯德基中国官网](https://www.kfc.com.cn/)及[百胜中国的食品介绍](https://ir.yumchina.com/static-files/d9d4333b-d3c5-4640-8876-9d11034e0dd6)。保留链接用于说明研究出处；当前本地关卡与文案统一使用虚构 KFB，未将上述品牌的图片或模型导入游戏。
 
 ## 界面参考与权利归属
 
@@ -32,3 +32,8 @@ ABC 是本游戏的虚构食物餐厅名称。建筑由概括的面包、肉饼�
 ## 游戏数值
 
 虚拟金币、初始预算、配装份额、食材数量、射速、碰撞范围、组合消除规则及得分由 `src/ingredient-rules.js`、`src/economy.js` 和游戏主逻辑定义。游戏金币不代表人民币价格，游戏食材份额不代表官方完整配方或原料重量。
+
+
+### 当前本地视觉参考（2026-10-15）
+
+用户指定的[麦当劳 MCP 公开产品页](https://open.mcd.cn/mcp)与[官方比赛横幅](https://raw.githubusercontent.com/M-China/mcd-developer-innovation-challenge/main/images/M-CODE-banner.png)用于颜色与层级研究。页面实际采用黑色主背景、麦黄主按钮和白色标题；本游戏将其适配为更大的中文粗字与精简的战斗 HUD。官网公告另有青绿与金黄复古海报版本，当前界面以黑黄产品页为主。官方图片只作参考，未导入游戏。

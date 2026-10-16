@@ -62,7 +62,7 @@ function makePool(group, name, capacity, geometry, material) {
 }
 
 /** Bounded, self-contained food impact effects. Call update with elapsed seconds. */
-export function createImpactFX(scene, { reducedMotion = false } = {}) {
+export function createImpactFX(scene, { reducedMotion = false, floorAt = (x, z) => Math.hypot(x, z) <= 7.08 ? FLOOR : -2.96 } = {}) {
   const group = new THREE.Group();
   group.name = 'food-impact-effects';
   scene.add(group);
@@ -89,16 +89,17 @@ export function createImpactFX(scene, { reducedMotion = false } = {}) {
     pool.particles.push({ age: 0, rx: 0, ry: 0, rz: 0, vx: 0, vy: 0, vz: 0, spin: 0, ...record });
   }
 
-  function paletteFor(kind) {
+  function paletteFor(event) {
+    const kind = event.kind;
+    if (event.foodModel === 'ketchup' || event.ammoId === 'ketchup') return [COLORS.ketchup, '#bb151c', '#ff4827'];
     if (kind === 'slide') return [COLORS.cola, COLORS.caramel, COLORS.cola];
     if (kind === 'burst') return [COLORS.cream, COLORS.cream, COLORS.cookie];
     return [COLORS.ketchup, COLORS.mustard, COLORS.mayo];
   }
 
   function stamp(x, z, size, colorValue, life = 6) {
-    // The physical dining platter has radius 7.12. Misses fall to the lower
-    // floor instead of painting a floating decal beyond its rim.
-    const floor = Math.hypot(x, z) <= 7.08 ? FLOOR : -2.96;
+    // Each scene provides its actual receiving surface for landed sauce.
+    const floor = floorAt(x, z);
     add('splats', { x, y: floor + random(0, 0.008), z, size, color: colorValue, life, rx: -Math.PI / 2, rz: random(0, TAU), squash: random(0.7, 1.3) });
   }
 
@@ -116,7 +117,7 @@ export function createImpactFX(scene, { reducedMotion = false } = {}) {
     const heavy = e.kind === 'heavy';
     const strength = e.strength * (target ? 1.2 : ability ? 1.12 : 1);
     const motion = reducedMotion ? 0.45 : 1;
-    const palette = paletteFor(e.kind);
+    const palette = paletteFor(e);
     const radius = clamp((heavy ? 1.45 : 1.05) * strength, 0.55, 2.5);
     const tint = e.kind === 'burst' ? '#fff6de' : e.kind === 'slide' ? '#f8c672' : '#ffe36a';
 
@@ -229,7 +230,7 @@ export function createImpactFX(scene, { reducedMotion = false } = {}) {
           p.vy -= (reducedMotion ? 5 : 9) * elapsed;
           p.x += p.vx * elapsed; p.y += p.vy * elapsed; p.z += p.vz * elapsed;
           p.rx += p.spin * elapsed; p.rz += p.spin * elapsed * 0.7;
-          const floor = Math.hypot(p.x, p.z) <= 7.08 ? FLOOR : -2.96;
+          const floor = floorAt(p.x, p.z);
           if (p.y < floor + 0.03) {
             if (pool.name === 'droplets') {
               stamp(p.x, p.z, p.size * random(1.65, 2.8), p.color, random(4.5, 7));

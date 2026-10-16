@@ -46,3 +46,13 @@ test('nutrition-only public snapshots preserve verified identities without makin
   assert.equal(snapshot.retrievedAt, null);
   assert.deepEqual(snapshot.products, []);
 });
+
+
+test('inline insertion preserves dollar expressions and replacement tokens exactly', () => {
+  const javascript = 'const $ = true; window.ready = $&&true; window.tokens = ["$&", "$`", "$$"];';
+  const stylesheet = '.label:after{content:"$& $` $$"}';
+  const html = renderSingleHtml(template, javascript, stylesheet);
+  assert.ok(html.includes(javascript), 'a minified dollar variable stays executable');
+  assert.ok(html.includes(stylesheet), 'CSS replacement tokens stay literal');
+  assert.equal((html.match(/<\/body>/g) || []).length, 1);
+});

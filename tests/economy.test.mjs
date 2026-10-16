@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DEFAULT_PACK_IDS, PACKS, buildInventory, consumeShot } from '../src/ingredient-rules.js';
-import { START_COINS, createEconomy, earnCoins, payLoadout, purchasePack, canRestock } from '../src/economy.js';
+import { START_COINS, STARTER_CORN, CORN_REFILL_COST, CORN_REFILL_AMOUNT, createEconomy, earnCoins, payLoadout, purchasePack, purchaseCorn, canRestock } from '../src/economy.js';
 
 const freezeState = state => Object.freeze({ ...state, rewardedIds: Object.freeze([...state.rewardedIds]) });
 const zeroInventory = () => buildInventory([]).inventory;
@@ -12,8 +12,8 @@ test('initial loadout spends coins once and preserves wallet input', () => {
   const paid = payLoadout(state, DEFAULT_PACK_IDS);
   assert.equal(paid.ok, true);
   assert.equal(paid.spent, 56);
-  assert.deepEqual(paid.state, { coins: 4, earned: 0, spent: 56, rewardedIds: [] });
-  assert.deepEqual(paid.inventory, buildInventory(DEFAULT_PACK_IDS).inventory);
+  assert.deepEqual(paid.state, { coins: 4, earned: 0, spent: 56, rewardedIds: [], loadoutPaid: true });
+  assert.deepEqual(paid.inventory, { ...buildInventory(DEFAULT_PACK_IDS).inventory, corn: STARTER_CORN });
   assert.deepEqual(state, createEconomy());
   assert.notEqual(paid.state.rewardedIds, state.rewardedIds);
 });
@@ -112,21 +112,65 @@ test('preparation uses source eligibility and rejects empty or invalid selection
   assert.equal(payLoadout(state, ['fries'], { allowedPackIds: ['fries'] }).ok, true);
 });
 
-test('restock eligibility follows actual coin balance and the active menu', () => {
+test('restock eligibility includes game corn independently of the active reference menu', () => {
   const empty = zeroInventory();
   assert.equal(canRestock(createEconomy(0)), false);
-  assert.equal(canRestock(createEconomy(9)), false);
+  assert.equal(canRestock(createEconomy(CORN_REFILL_COST-1)), false);
+  assert.equal(canRestock(createEconomy(CORN_REFILL_COST)), true);
+  assert.equal(canRestock(createEconomy(9)), true);
   assert.equal(canRestock(createEconomy(10)), true);
-  assert.equal(canRestock(createEconomy(10), ['nuggets']), false);
+  assert.equal(canRestock(createEconomy(10), ['nuggets']), true);
   assert.equal(canRestock(createEconomy(12), new Set(['nuggets'])), true);
-  assert.equal(canRestock(createEconomy(), []), false);
-  assert.equal(canRestock(createEconomy(), {}), false);
+  assert.equal(canRestock(createEconomy(), []), true);
+  assert.equal(canRestock(createEconomy(), {}), true);
   for (const pack of PACKS) {
     const state = createEconomy(pack.cost);
     assert.equal(canRestock(state, [pack.id]), true);
     const purchase = purchasePack(state, empty, { id: pack.id, allowedPackIds: [pack.id] });
     assert.equal(purchase.ok, true);
     assert.equal(purchase.state.coins, 0);
+  }
+});
+
+test('starter corn arrives once with a successful initial loadout and stays separate from restaurant recipes',()=>{
+  assert.equal(buildInventory(DEFAULT_PACK_IDS).inventory.corn,0);
+  const paid=payLoadout(createEconomy(),['fries']);
+  assert.equal(paid.inventory.corn,STARTER_CORN);
+  assert.equal(paid.added.corn,STARTER_CORN);
+  const repeated=payLoadout(paid.state,['fries']);
+  assert.equal(repeated.ok,false);assert.equal(repeated.state,paid.state);assert.equal(repeated.spent,0);
+  assert.ok(Object.values(repeated.added).every(value=>value===0));
+  const next=purchasePack(paid.state,paid.inventory,{id:'fries'});
+  assert.equal(next.ok,true);assert.equal(next.inventory.corn,STARTER_CORN);assert.equal(next.added.corn,0);
+  const failed=payLoadout(createEconomy(),['unknown']);
+  assert.equal(failed.inventory.corn,0);assert.equal(failed.added.corn,0);
+});
+
+test('corn refill spends six coins and adds eighty rounds without changing other ammunition',()=>{
+  const state=freezeState(createEconomy(CORN_REFILL_COST));
+  const inventory=Object.freeze({...zeroInventory(),corn:11,bun:2});
+  const result=purchaseCorn(state,inventory);
+  assert.equal(result.ok,true);assert.equal(result.spent,CORN_REFILL_COST);
+  assert.equal(result.inventory.corn,11+CORN_REFILL_AMOUNT);assert.equal(result.inventory.bun,2);
+  assert.equal(result.state.coins,0);assert.equal(result.state.spent,CORN_REFILL_COST);
+  assert.equal(result.added.corn,CORN_REFILL_AMOUNT);
+  assert.equal(Object.values(result.added).reduce((sum,value)=>sum+value,0),CORN_REFILL_AMOUNT);
+  assert.equal(state.coins,CORN_REFILL_COST);assert.equal(inventory.corn,11);
+  assert.notEqual(result.state.rewardedIds,state.rewardedIds);
+});
+
+test('corn refill rejects insufficient funds, invalid inventory and overflow atomically',()=>{
+  const cases=[
+    [createEconomy(CORN_REFILL_COST-1),zeroInventory()],
+    [createEconomy(),{corn:-1}], [createEconomy(),{corn:.5}],
+    [createEconomy(),{corn:Number.MAX_SAFE_INTEGER}], [createEconomy(),{laser:1}],
+    [createEconomy(),null], [{...createEconomy(),spent:Number.MAX_SAFE_INTEGER},zeroInventory()],
+    [{...createEconomy(),coins:NaN},zeroInventory()],
+  ];
+  for(const [state,inventory] of cases){
+    const result=purchaseCorn(state,inventory);
+    assert.equal(result.ok,false);assert.equal(result.state,state);assert.equal(result.inventory,inventory);
+    assert.equal(result.spent,0);assert.ok(Object.values(result.added).every(value=>value===0));
   }
 });
 

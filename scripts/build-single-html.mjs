@@ -3,6 +3,7 @@ import path from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
+import { Script } from 'node:vm';
 import { build } from 'vite';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
@@ -58,7 +59,7 @@ export function renderSingleHtml(template, javascript, stylesheet, snapshot = nu
   let html = template
     .replace(/<script\b[^>]*\bsrc=["'][^"']+["'][^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<link\b(?=[^>]*\brel=["'](?:stylesheet|modulepreload|preload)["'])[^>]*>/gi, '')
-    .replace(/<dialog\b[^>]*\bid="dataDialog"[\s\S]*?<\/dialog>/i, offlineDataDialog())
+    .replace(/<dialog\b[^>]*\bid="dataDialog"[\s\S]*?<\/dialog>/i, () => offlineDataDialog())
     .replace('<head>', `<head>
   <meta name="maimai-build" content="single-html-offline" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; connect-src 'none'; worker-src blob:; base-uri 'none'; form-action 'none'" />`);
@@ -67,11 +68,14 @@ export function renderSingleHtml(template, javascript, stylesheet, snapshot = nu
     throw new Error('单 HTML 仍引用外部运行资源。');
   }
   if (/url\(\s*["']?(?!data:|#)[^\s)"']+/i.test(stylesheet)) throw new Error('样式仍引用外部运行资源。');
-  html = html.replace('</head>', `<style>${stylesheet}</style>\n</head>`);
-  if (licenseText) html = html.replace('</head>', `<!--\nTHIRD-PARTY LICENSE — three.js\n${licenseText.replace(/--/g, '—')}\n-->\n</head>`);
+  html = html.replace('</head>', () => `<style>${stylesheet}</style>\n</head>`);
+  if (licenseText) html = html.replace('</head>', () => `<!--\nTHIRD-PARTY LICENSE — three.js\n${licenseText.replace(/--/g, '—')}\n-->\n</head>`);
   const data = escapeInlineScript(JSON.stringify(snapshot));
   const boot = `window.__MAIMAI_PUBLIC_SNAPSHOT__=${data};\n${javascript}`;
-  html = html.replace('</body>', `<script>${escapeInlineScript(boot)}</script>\n</body>`);
+  const inlineJavaScript = escapeInlineScript(boot);
+  new Script(inlineJavaScript, { filename: SINGLE_HTML_NAME });
+  // Callback insertion preserves literal dollar tokens emitted by the minifier.
+  html = html.replace('</body>', () => `<script>${inlineJavaScript}</script>\n</body>`);
   if (/\bid=["']mcpToken["']|\btype=["']password["']|\/api\/mcp\//i.test(html)) {
     throw new Error('离线产物仍包含账号输入或 MCP API 路径；请先接入 __SINGLE_HTML__ 离线分支。');
   }

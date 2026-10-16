@@ -3,6 +3,7 @@
 export const RULES_SOURCE='游戏份额不等于真实配方；补给点为游戏数值，MCP 营养数据用于识别商品';
 export const PREP_BUDGET=60;
 export const MAX_PACKS=6;
+export const CORN_HITS_TO_CLEAR=8;
 
 export const INGREDIENTS=Object.freeze([
   {id:'bun',name:'面包',color:'#e7a449',model:'bun',power:.65,description:'击中面包，消除相连面包；搭配肉饼组成汉堡。'},
@@ -13,6 +14,7 @@ export const INGREDIENTS=Object.freeze([
   {id:'fry',name:'薯条',color:'#f5c54d',model:'fry',power:.5,description:'消除相连薯条；命中番茄酱，清理同层薯条。'},
   {id:'nugget',name:'鸡块',color:'#d99631',model:'nugget',power:.9,description:'消除相连鸡块，拆开紧密堆叠的鸡块墙。'},
   {id:'burgerbomb',name:'汉堡炸弹',color:'#e95a32',model:'burgerbomb',power:2.5,description:'配装时保留一整份汉堡作为炸弹，炸开命中点附近的食材。'},
+  {id:'corn',name:'玉米粒',color:'#ffcf28',model:'corn',power:.2,description:'长按连射，命中任意食材八次即可击碎；同料弹药能更快连消。'},
 ].map(Object.freeze));
 
 export const PACKS=Object.freeze([
@@ -97,13 +99,20 @@ function connected(target,nodes,{accept,radius,maxBlocks,linkDistance=MATCH_RULE
 
 /**
  * Resolve one physical contact. Nodes are plain {id,ingredient,x,y,z,hp} data.
- * Ingredient matching and recipes remove blocks; a mismatched hit gives a
- * physical impact cue without health damage. Main owns impulses and animation.
+ * Corn chips one target's separate durability. Ingredient matching and recipes
+ * remove blocks directly. Main applies the returned damage and animation.
  */
 export function resolveHit({ammo,target,neighbors=[]}={}){
   const ammoId=typeof ammo==='string'?ammo:ammo?.id,ingredient=ingredientById.get(ammoId);
   const result={type:'impact',label:'换种食材试试',removeIds:[],damage:[],combo:null,impulse:ingredient?.power??0};
   if(!ingredient||!validNode(target))return result;
+  if(ammoId==='corn'){
+    const health=target.cornHp??CORN_HITS_TO_CLEAR;
+    if(!Number.isSafeInteger(health)||health<1||health>CORN_HITS_TO_CLEAR)return result;
+    const remaining=health-1;
+    return {...result,type:'chip',label:remaining?`命中！还需 ${remaining} 粒`:'玉米击碎！',
+      removeIds:remaining?[]:[target.id],damage:[{id:target.id,amount:1,remaining}]};
+  }
   const unique=new Map([[target.id,target]]);
   for(const node of Array.isArray(neighbors)?neighbors:[])if(validNode(node)&&!unique.has(node.id))unique.set(node.id,node);
   const nodes=[...unique.values()];

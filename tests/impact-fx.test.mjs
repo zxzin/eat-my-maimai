@@ -58,3 +58,24 @@ test('reset clears all render instances and malformed events stay inert', () => 
   assert.ok(fx.stats.active > 0, 'a new round can immediately show its first impact');
   fx.dispose();
 });
+
+
+test('ketchup leaves red sauce on the current scene surface', () => {
+  const scene = new THREE.Scene();
+  const floorAt = (x, z) => Math.abs(x) < 6 && Math.abs(z) < 2.25 ? 0.273 : -0.045;
+  const fx = createImpactFX(scene, { floorAt });
+  fx.ability({ position: [0, 0.8, 1], kind: 'slide', foodModel: 'ketchup' });
+  const splats = scene.children[0].children.find(mesh => mesh.name === 'impact-fx-splats');
+  const color = new THREE.Color(), matrix = new THREE.Matrix4(), position = new THREE.Vector3();
+  splats.getColorAt(0, color);
+  assert.equal(color.getHexString(), 'e92d29', 'tomato sauce keeps its ingredient color');
+  splats.getMatrixAt(0, matrix);position.setFromMatrixPosition(matrix);
+  assert.ok(position.y >= 0.273 && position.y < 0.282, 'sauce is above the restaurant platform');
+  for (let i = 0; i < 25; i++) fx.update(0.1);
+  for (let i = 0; i < splats.count; i++) {
+    splats.getMatrixAt(i, matrix);position.setFromMatrixPosition(matrix);
+    const surface = floorAt(position.x, position.z);
+    assert.ok(position.y >= surface - 1e-6 && position.y < surface + 0.009, 'airborne drops land on the same visible surface');
+  }
+  fx.dispose();
+});

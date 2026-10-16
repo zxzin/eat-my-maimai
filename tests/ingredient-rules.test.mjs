@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {INGREDIENTS,PACKS,PREP_BUDGET,DEFAULT_PACK_IDS,WHOLE_BURGER_PACK_IDS,MATCH_RULES,buildInventory,initialLoadout,consumeShot,resolveHit} from '../src/ingredient-rules.js';
+import {INGREDIENTS,PACKS,PREP_BUDGET,DEFAULT_PACK_IDS,WHOLE_BURGER_PACK_IDS,MATCH_RULES,CORN_HITS_TO_CLEAR,buildInventory,initialLoadout,consumeShot,resolveHit} from '../src/ingredient-rules.js';
 
 const block=(id,ingredient,x=0,y=0,z=0,extra={})=>({id,ingredient,x,y,z,hp:1,...extra});
 
@@ -9,7 +9,7 @@ test('default preparation purchases finite authored ingredients within the budge
   assert.equal(loadout.ok,true);assert.equal(loadout.spent,56);assert.equal(loadout.remaining,PREP_BUDGET-56);
   assert.deepEqual(loadout.selectedPackIds,DEFAULT_PACK_IDS.map(entry=>typeof entry==='string'?entry:entry.id));
   assert.deepEqual(loadout.selectedPacks,[{id:'bigmac',mode:'split'},{id:'fries',mode:'split'},{id:'nuggets',mode:'split'},{id:'spicy',mode:'whole'}]);
-  assert.deepEqual(loadout.inventory,{bun:2,ketchup:3,patty:2,onion:1,sausage:0,fry:6,nugget:5,burgerbomb:1});
+  assert.deepEqual(loadout.inventory,{bun:2,ketchup:3,patty:2,onion:1,sausage:0,fry:6,nugget:5,burgerbomb:1,corn:0});
   for(const pack of PACKS)for(const [id,count] of Object.entries(pack.ingredients)){
     assert.ok(INGREDIENTS.some(ingredient=>ingredient.id===id));
     assert.ok(Number.isSafeInteger(count)&&count>0);
@@ -131,5 +131,38 @@ test('resolution ignores stale and malformed contacts and keeps input nodes immu
   assert.equal(target.hp,1);assert.equal(neighbor.hp,1);
   for(const input of [undefined,{ammo:'laser',target},{ammo:'bun',target:block('bad','bun',NaN)},{ammo:'bun',target:{id:'missing'}}]){
     assert.deepEqual(resolveHit(input).removeIds,[]);
+  }
+});
+
+test('corn chips every food eight times, clears one target, and leaves neighbors intact',()=>{
+  for(const {id} of INGREDIENTS){
+    let target=Object.freeze(block('target',id));
+    const neighbor=Object.freeze(block('neighbor',id,.5));
+    for(let hit=1;hit<=CORN_HITS_TO_CLEAR;hit++){
+      const result=resolveHit({ammo:'corn',target,neighbors:[neighbor]});
+      assert.equal(result.type,'chip');assert.equal(result.combo,null);
+      assert.deepEqual(result.damage,[{id:'target',amount:1,remaining:CORN_HITS_TO_CLEAR-hit}]);
+      assert.deepEqual(result.removeIds,hit===CORN_HITS_TO_CLEAR?['target']:[]);
+      assert.equal(neighbor.cornHp,undefined);
+      target=Object.freeze({...target,cornHp:result.damage[0].remaining});
+    }
+    assert.deepEqual(resolveHit({ammo:'corn',target}).removeIds,[]);
+    assert.deepEqual(resolveHit({ammo:'corn',target}).damage,[]);
+  }
+});
+
+test('matching and recipe ammo clear a partly chipped target immediately',()=>{
+  const target=Object.freeze(block('bread','bun',0,0,0,{cornHp:6}));
+  const neighbor=Object.freeze(block('bread-two','bun',1,0,0,{cornHp:7}));
+  assert.deepEqual(resolveHit({ammo:'bun',target,neighbors:[neighbor]}).removeIds,['bread','bread-two']);
+  assert.equal(resolveHit({ammo:'patty',target}).type,'combo');
+  assert.equal(target.cornHp,6);
+  assert.deepEqual(consumeShot({corn:2},'corn').inventory,{corn:1});
+});
+
+test('corn rejects protected, stale and malformed durability without applying damage',()=>{
+  for(const extra of [{removed:true},{destructible:false},{hp:0},{cornHp:0},{cornHp:-1},{cornHp:.5},{cornHp:Infinity},{cornHp:9}]){
+    const result=resolveHit({ammo:'corn',target:block('food','fry',0,0,0,extra)});
+    assert.deepEqual(result.damage,[]);assert.deepEqual(result.removeIds,[]);
   }
 });
