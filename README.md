@@ -4,6 +4,8 @@
 
 **[打开在线试玩](https://zxzin.github.io/eat-my-maimai/)** · [下载离线单 HTML](https://github.com/zxzin/eat-my-maimai/releases/latest) · [单页源码](docs/index.html)
 
+[麦当劳程序员创意开发大赛 · 参赛申请 #797](https://github.com/M-China/mcd-developer-innovation-challenge/issues/797)
+
 手机与电脑均可进入，下载单文件后也能离线游玩。
 
 一款适合电脑和手机试玩的独立 3D 小游戏：玩家选择餐品配置弹药，在虚构的 KFB 食物餐厅中触发同类消除和食材组合，赚取金币、随时补给。麦当劳 MCP 为配装提供真实餐品数据。多层餐厅含鸡块桶、酱料泵、薯条风扇三处机关，击中弱点触发连锁。引爆三处机关并清除 32 块食材即可通关。

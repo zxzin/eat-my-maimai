@@ -1,6 +1,6 @@
 {
   "format": "maimai-public-source-package",
-  "preparedAt": "2026-10-16T08:01:42.106Z",
+  "preparedAt": "2026-10-16T08:13:47.790Z",
   "publication": "local-only",
   "files": [
     {
@@ -25,8 +25,8 @@
     },
     {
       "file": "README.md",
-      "bytes": 7107,
-      "sha256": "172ff8e02fde4c8efdfb0c222a27350274c95ddcaaf2fea2d32753c11b6a617a"
+      "bytes": 7242,
+      "sha256": "85b21e117359008848ac981c501c8bc895610af9429b00fabc224363459bce2c"
     },
     {
       "file": "THIRD_PARTY_NOTICES.md",
@@ -35,8 +35,8 @@
     },
     {
       "file": "docs/CONTEST_CHECKLIST.md",
-      "bytes": 4942,
-      "sha256": "282fd57e28d8d961415d9b65335df275aad579dbe2c6c5faaba92dac55a4e276"
+      "bytes": 5289,
+      "sha256": "778c40f9ef4e6f1fd0ff0ece0323080d68edb6318375141a028c5c0e8ccd10a7"
     },
     {
       "file": "docs/SOURCES.md",
